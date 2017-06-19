@@ -16,8 +16,12 @@ def index(request):
 	num_authors = Author.objects.count()
 	num_genres = Genre.objects.all().count()
 	booktitle_startswith_the = Book.objects.filter(title__istartswith='t').count()
+
+	# Nymber of visits to this, as counted in the session variable.
+	num_visits = request.session.get('num_visits', 0)
+	request.session['num_visits'] = num_visits + 1
 	#Render the  HTML template index.html with the data in the contex variables
-	context = {'num_books':num_books,'num_instances':num_instances,'num_instances_available':num_instances_available,'num_authors':num_authors,'num_genres':num_genres,'booktitle_startswith_the':booktitle_startswith_the}
+	context = {'num_books':num_books,'num_instances':num_instances,'num_instances_available':num_instances_available,'num_authors':num_authors,'num_genres':num_genres,'booktitle_startswith_the':booktitle_startswith_the, 'num_visits' : num_visits}
 	return render(request, 'index.html', context )
 
 
