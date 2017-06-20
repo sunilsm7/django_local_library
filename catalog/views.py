@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import datetime
-from .forms import RenewBookForm
+from .forms import RenewBookForm, RenewBookModelForm
 
 
 # Create your views here.
