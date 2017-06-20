@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Delete Book</h1>
+
+<div class="alert alert-danger">Are you sure you want to delete the book: <strong>{{ book }}?</strong></div>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" action="" value="Yes, delete." class="btn btn-default"/>
+</form>
+
+{% endblock %}
