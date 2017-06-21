@@ -4,7 +4,15 @@
 	{% if user.is_staff %}
 		<h3> <a href="{% url 'book_create' %}">Add new Book</a></h3> 
 	{% endif %}
-
+	<div class="container">
+		<form class="form-inline" method = "GET" action="">
+			  <div class="form-group">
+			    <label for="title">Book Title:</label>
+			    {{ form.title}}
+			  </div>
+			  <button type="submit" class="btn btn-default" class="btn btn-primary">Search</button>
+			</form>
+	</div>
 	{% if book_list %}
 	<ul>
 
@@ -21,4 +29,6 @@
 	{% else %}
 		<p>There are no books in the library.</p>
 	{% endif %}
+
+	
 {% endblock %}

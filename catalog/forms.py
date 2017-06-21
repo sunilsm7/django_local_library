@@ -48,3 +48,7 @@ class RenewBookModelForm(forms.ModelForm):
 		fields = ['due_back',]
 		labels = {'due_back': _('Renewal date'),}
 		help_text = {'due_back': _('Enter a date between now and 4 weeks (default 3).'),}
+
+
+class BookSearchForm(forms.Form):
+	title = forms.CharField(required = False, widget=forms.TextInput(attrs={'class': 'form-control', 'id':'title', 'placeholder':'Enter book title'}))

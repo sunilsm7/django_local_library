@@ -9,10 +9,14 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 import datetime
-from .forms import RenewBookForm, RenewBookModelForm
+from .forms import RenewBookForm, RenewBookModelForm, BookSearchForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-
+from django.db.models import (Q, Count)
+from search_views.views import SearchListView
+from search_views.filters import BaseFilter
+from django.http import HttpResponse
+import json
 # Create your views here.
 
 
@@ -39,19 +43,30 @@ def index(request):
     return render(request, 'index.html', context)
 
 
-class BookListView(generic.ListView):
+class BookFilter(BaseFilter):
+    search_fields = {
+        "title": ["title"],      
+    }
+
+
+class BookListView(SearchListView):
     model = Book
     context_object_name = 'book_list'
-    queryset = Book.objects.all()
-    template_name = 'catlog/book_list.html'
+    queryset = Book.objects.all().order_by('title')
+    template_name = 'catalog/book_list.html'
     paginate_by = 10
+    form_class = BookSearchForm
+    filter_class = BookFilter
 
     def get_context_data(self, **kwargs):
         context = super(BookListView, self).get_context_data(**kwargs)
         context['books_count'] = Book.objects.all().count()
         return context
 
-
+    def get_queryset(self):
+        queryset = Book.objects.all().order_by('title')
+        return queryset      
+                
 class BookDetailView(generic.DetailView):
     model = Book
 
@@ -159,3 +174,19 @@ class BookDelete(PermissionRequiredMixin, DeleteView):
     model = Book
     success_url = reverse_lazy('books')
     permission_required = 'catalog.can_mark_returned'
+
+
+def search_book_title(request):
+    if request.is_ajax:
+        title = request.GET.get('start', '')
+        books = Book.objects.all().filter(Q(title__icontains=title))
+        results = []
+        for book_title in books:
+            book_title_json = {}
+            book_title_json['label'] = book_title.title
+            book_title_json['value'] = book_title.title
+            results.append(book_title_json)
+        data_json = json.dumps(results)
+    else:
+        data_json = 'fail'
+    return HttpResponse(data_json, content_type='application/json')

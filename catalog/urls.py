@@ -4,6 +4,9 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    #Ajax Search
+    url(r'^booksearch/$', views.search_book_title, name = 'book_title'),
+    
     url(r'^books/$', views.BookListView.as_view(), name='books'),
     url(r'^book/(?P<pk>\d+)$', views.BookDetailView.as_view(), name='book-detail'),
     url(r'^authors/$', views.AuthorListView.as_view(), name='authors'),
